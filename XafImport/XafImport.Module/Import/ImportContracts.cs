@@ -22,6 +22,7 @@ namespace XafImport.Module.Import
     // File-source parsers (one per format); detection by magic bytes, never extension.
     public interface IFormatParser
     {
+        FileFormat Format { get; }
         bool CanParse(ReadOnlySpan<byte> magicBytes, string? fileNameHint);
         ISourceReader Open(Stream stream);
     }

@@ -37,6 +37,11 @@ namespace XafImport.Blazor.Server
             services.AddJobHandler<PingCommand, PingHandler>();
             services.AddScoped<XafImport.Module.Import.IStagingLoader, XafImport.Module.Import.SqlServerStagingLoader>();
             services.AddScoped<XafImport.Module.Import.ImportService>();
+            // Registration order = magic-byte detection order; TXT is the catch-all and stays last.
+            services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.JsonFormatParser>();
+            services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.XmlFormatParser>();
+            services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.TxtFormatParser>();
+            services.AddScoped<XafImport.Module.Import.FileSource>();
             services.AddJobHandler<DevStubImportCommand, DevStubImportHandler>();
             services.AddXaf(Configuration, builder =>
             {
@@ -161,11 +166,13 @@ namespace XafImport.Blazor.Server
                         await context.Response.WriteAsync("enqueued");
                     });
                     // Smoke-test hook: stub import through the real pipeline (Hangfire -> XAF scope -> staging).
+                    // Optional ?fmt=json|xml|txt runs a sample payload through FileSource auto-detection.
                     endpoints.MapGet("/dev/test-import", async context =>
                     {
+                        var fmt = context.Request.Query["fmt"].FirstOrDefault();
                         await context.RequestServices.GetRequiredService<IJobDispatcher>()
-                            .DispatchAsync(new DevStubImportCommand());
-                        await context.Response.WriteAsync("import enqueued");
+                            .DispatchAsync(new DevStubImportCommand(fmt));
+                        await context.Response.WriteAsync($"import enqueued (fmt={fmt ?? "stub"})");
                     });
                 }
             });

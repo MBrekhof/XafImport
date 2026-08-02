@@ -9,35 +9,56 @@ namespace XafImport.Blazor.Server.Jobs
 {
     // Dev-only smoke test: fixed records through the REAL execution path
     // (Hangfire queue -> XAF scope init -> ImportService -> staging table).
-    public sealed record DevStubImportCommand();
+    // Format null = in-memory stub source; "json"/"xml"/"txt" = sample payload
+    // through FileSource with FileFormat.Auto, exercising magic-byte detection.
+    public sealed record DevStubImportCommand(string? Format = null);
 
     public sealed class DevStubImportHandler : IJobHandler<DevStubImportCommand>
     {
+        private static readonly Dictionary<string, string> SamplePayloads = new()
+        {
+            ["json"] = """[{"Name":"a","Qty":1,"Active":true},{"Name":"b","Qty":2.5,"Active":false}]""",
+            ["xml"] = "<rows><row><Name>a</Name><Qty>1</Qty></row><row><Name>b</Name><Qty>2</Qty></row></rows>",
+            ["txt"] = "hello\nworld\nthird line",
+        };
+
         private readonly ImportService importService;
         private readonly IObjectSpaceFactory objectSpaceFactory;
+        private readonly FileSource fileSource;
 
-        public DevStubImportHandler(ImportService importService, IObjectSpaceFactory objectSpaceFactory)
+        public DevStubImportHandler(ImportService importService, IObjectSpaceFactory objectSpaceFactory, FileSource fileSource)
         {
             this.importService = importService;
             this.objectSpaceFactory = objectSpaceFactory;
+            this.fileSource = fileSource;
         }
 
         public async Task ExecuteAsync(DevStubImportCommand command, CancellationToken ct = default)
         {
+            var definitionName = command.Format == null ? "DevTest" : "DevTest_" + command.Format;
             Guid definitionId;
             using (var os = objectSpaceFactory.CreateObjectSpace<ImportDefinition>())
             {
-                var definition = os.FirstOrDefault<ImportDefinition>(d => d.Name == "DevTest");
+                var definition = os.FirstOrDefault<ImportDefinition>(d => d.Name == definitionName);
                 if (definition == null)
                 {
                     definition = os.CreateObject<ImportDefinition>();
-                    definition.Name = "DevTest";
+                    definition.Name = definitionName;
                     definition.SourceType = SourceType.File;
+                    definition.FileFormat = FileFormat.Auto;
                     os.CommitChanges();
                 }
                 definitionId = definition.ID;
             }
-            await importService.RunAsync(definitionId, new StubSource(), null, "dev stub (3 records)", ct);
+            if (command.Format == null)
+            {
+                await importService.RunAsync(definitionId, new StubSource(), null, "dev stub (3 records)", ct);
+            }
+            else
+            {
+                using var payload = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(SamplePayloads[command.Format]));
+                await importService.RunAsync(definitionId, fileSource, payload, $"dev sample ({command.Format}, auto-detect)", ct);
+            }
         }
     }
 
