@@ -35,6 +35,9 @@ namespace XafImport.Blazor.Server
             services.AddScoped<CircuitHandler, CircuitHandlerProxy>();
             services.AddJobDispatcher(Configuration);
             services.AddJobHandler<PingCommand, PingHandler>();
+            services.AddScoped<XafImport.Module.Import.IStagingLoader, XafImport.Module.Import.SqlServerStagingLoader>();
+            services.AddScoped<XafImport.Module.Import.ImportService>();
+            services.AddJobHandler<DevStubImportCommand, DevStubImportHandler>();
             services.AddXaf(Configuration, builder =>
             {
                 builder.UseApplication<XafImportBlazorApplication>();
@@ -156,6 +159,13 @@ namespace XafImport.Blazor.Server
                         await context.RequestServices.GetRequiredService<IJobDispatcher>()
                             .DispatchAsync(new PingCommand("dev endpoint"));
                         await context.Response.WriteAsync("enqueued");
+                    });
+                    // Smoke-test hook: stub import through the real pipeline (Hangfire -> XAF scope -> staging).
+                    endpoints.MapGet("/dev/test-import", async context =>
+                    {
+                        await context.RequestServices.GetRequiredService<IJobDispatcher>()
+                            .DispatchAsync(new DevStubImportCommand());
+                        await context.Response.WriteAsync("import enqueued");
                     });
                 }
             });
