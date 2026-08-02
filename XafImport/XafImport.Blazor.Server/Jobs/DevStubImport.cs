@@ -25,15 +25,18 @@ namespace XafImport.Blazor.Server.Jobs
         };
 
         private readonly ImportService importService;
+        private readonly ExportService exportService;
         private readonly IObjectSpaceFactory objectSpaceFactory;
         private readonly FileSource fileSource;
         private readonly SqlServerSource sqlServerSource;
         private readonly IConfiguration configuration;
 
-        public DevStubImportHandler(ImportService importService, IObjectSpaceFactory objectSpaceFactory,
+        public DevStubImportHandler(ImportService importService, ExportService exportService,
+            IObjectSpaceFactory objectSpaceFactory,
             FileSource fileSource, SqlServerSource sqlServerSource, IConfiguration configuration)
         {
             this.importService = importService;
+            this.exportService = exportService;
             this.objectSpaceFactory = objectSpaceFactory;
             this.fileSource = fileSource;
             this.sqlServerSource = sqlServerSource;
@@ -102,6 +105,12 @@ namespace XafImport.Blazor.Server.Jobs
                     definition.SqlConnectionString = configuration.GetConnectionString("ConnectionString");
                     definition.SqlQuery = "SELECT name AS TableName, object_id AS ObjectId, create_date AS CreatedOn FROM sys.tables";
                 }
+                if (command.Format == "export")
+                {
+                    definition.Direction = TransferDirection.Export;
+                    definition.FileFormat = FileFormat.Txt; // csv
+                    definition.SqlQuery = "SELECT Name, Qty, Active FROM stg_DevTest_json";
+                }
                 os.CommitChanges();
                 definitionId = definition.ID;
             }
@@ -112,6 +121,9 @@ namespace XafImport.Blazor.Server.Jobs
                     break;
                 case "sql":
                     await importService.RunAsync(definitionId, sqlServerSource, null, "dev sql (sys.tables)", ct);
+                    break;
+                case "export":
+                    await exportService.RunAsync(definitionId, ct);
                     break;
                 case "xlsx":
                     using (var xlsx = BuildSampleXlsx())

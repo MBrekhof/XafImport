@@ -19,9 +19,9 @@ namespace XafImport.Module.Controllers
         {
             runImport = new SimpleAction(this, "RunImport", PredefinedCategory.Edit)
             {
-                Caption = "Run Import",
+                Caption = "Run",
                 ImageName = "Action_SimpleAction",
-                ToolTip = "Queue this import; results appear under Import Runs",
+                ToolTip = "Queue this import/export; results appear under Import Runs",
             };
             runImport.Execute += RunImport_Execute;
         }
@@ -54,8 +54,15 @@ namespace XafImport.Module.Controllers
             }
             var dispatcher = Application.ServiceProvider.GetRequiredService<IJobDispatcher>();
             // Hangfire dispatch just enqueues (completes synchronously); the Direct fallback runs inline.
-            dispatcher.DispatchAsync(new RunImportCommand(definition.ID)).GetAwaiter().GetResult();
-            Application.ShowViewStrategy.ShowMessage("Import queued — see Import Runs for progress.", InformationType.Success);
+            if (definition.Direction == TransferDirection.Export)
+            {
+                dispatcher.DispatchAsync(new RunExportCommand(definition.ID)).GetAwaiter().GetResult();
+            }
+            else
+            {
+                dispatcher.DispatchAsync(new RunImportCommand(definition.ID)).GetAwaiter().GetResult();
+            }
+            Application.ShowViewStrategy.ShowMessage("Run queued — see Import Runs for progress.", InformationType.Success);
         }
     }
 }

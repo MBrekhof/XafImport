@@ -123,15 +123,7 @@ namespace XafImport.Module.Import
             finally
             {
                 run.Finished = DateTime.Now;
-                if (definition.NotifyOnCompletion)
-                {
-                    // NOT-001: picked up by the XAF Notifications module on its next poll.
-                    var notification = os.CreateObject<ImportNotification>();
-                    notification.Run = run;
-                    notification.AlarmTime = DateTime.Now;
-                    notification.Message =
-                        $"Import '{definition.Name}' {run.Status}: {run.RecordsRead} read, {run.RecordsStaged} staged, {run.RecordsFailed} failed";
-                }
+                Notify(os, run, definition, "Import");
                 os.CommitChanges();
             }
             return run.ID;
@@ -148,7 +140,21 @@ namespace XafImport.Module.Import
             }
         }
 
-        private static void Log(IObjectSpace os, ImportRun run, ImportLogLevel level, string message, int? recordNumber = null)
+        // NOT-001: picked up by the XAF Notifications module on its next poll. Shared with ExportService.
+        internal static void Notify(IObjectSpace os, ImportRun run, ImportDefinition definition, string verb)
+        {
+            if (!definition.NotifyOnCompletion)
+            {
+                return;
+            }
+            var notification = os.CreateObject<ImportNotification>();
+            notification.Run = run;
+            notification.AlarmTime = DateTime.Now;
+            notification.Message =
+                $"{verb} '{definition.Name}' {run.Status}: {run.RecordsRead} read, {run.RecordsStaged} staged, {run.RecordsFailed} failed";
+        }
+
+        internal static void Log(IObjectSpace os, ImportRun run, ImportLogLevel level, string message, int? recordNumber = null)
         {
             var entry = os.CreateObject<ImportLogEntry>();
             entry.Run = run;

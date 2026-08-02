@@ -30,6 +30,16 @@ namespace XafImport.Module.BusinessObjects.Import
         public virtual int RecordsStaged { get; set; }
         public virtual int RecordsFailed { get; set; }
 
+        // Export runs: the produced file, downloadable via the standard file editor.
+        [VisibleInDetailView(false)]
+        [VisibleInListView(false)]
+        public virtual Guid? ResultFileId { get; set; }
+
+        [ForeignKey(nameof(ResultFileId))]
+        [Aggregated]
+        [ExpandObjectMembers(ExpandObjectMembers.Never)]
+        public virtual FileData? ResultFile { get; set; }
+
         [Aggregated]
         public virtual IList<ImportLogEntry> LogEntries { get; set; } = new ObservableCollection<ImportLogEntry>();
     }

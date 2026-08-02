@@ -15,12 +15,18 @@ namespace XafImport.Module.BusinessObjects.Import
 
     public enum ErrorPolicy { ContinueSkipRecord, Abort }
 
+    public enum TransferDirection { Import, Export }
+
     [DefaultClassOptions]
     [DefaultProperty(nameof(Name))]
     [NavigationItem("Import")]
     public class ImportDefinition : BaseObject
     {
         public virtual string Name { get; set; } = string.Empty;
+
+        [ToolTip("Import: load external data into staging. Export: run SqlQuery and write the result to a file on the run.")]
+        public virtual TransferDirection Direction { get; set; }
+
         public virtual SourceType SourceType { get; set; }
         public virtual FileFormat FileFormat { get; set; }
         public virtual bool Enabled { get; set; } = true;
