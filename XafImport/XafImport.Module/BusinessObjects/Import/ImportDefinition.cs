@@ -13,6 +13,8 @@ namespace XafImport.Module.BusinessObjects.Import
     // Auto = detect by magic bytes; explicit value overrides detection.
     public enum FileFormat { Auto, Json, Xml, Xls, Pdf, Doc, Txt }
 
+    public enum ErrorPolicy { ContinueSkipRecord, Abort }
+
     [DefaultClassOptions]
     [DefaultProperty(nameof(Name))]
     [NavigationItem("Import")]
@@ -25,6 +27,12 @@ namespace XafImport.Module.BusinessObjects.Import
 
         [ToolTip("Optional cron expression for scheduled background runs")]
         public virtual string? CronExpression { get; set; }
+
+        [ToolTip("What to do when a record fails: skip it and continue, or abort the run")]
+        public virtual ErrorPolicy OnError { get; set; }
+
+        [ToolTip("With ContinueSkipRecord: abort anyway once this many records failed (0 = unlimited)")]
+        public virtual int MaxErrors { get; set; }
 
         // SQL Server source. ponytail: stored plain until SRC-001 adds encryption (provider_settings pattern).
         public virtual string? SqlConnectionString { get; set; }

@@ -80,6 +80,8 @@ namespace XafImport.Module.Import
                 run.StagingTableName = tableName;
                 Log(os, run, ImportLogLevel.Info, $"Load: staging table {tableName} ready ({schema.Columns.Count} columns)");
 
+                var onError = definition.OnError;
+                var maxErrors = definition.MaxErrors;
                 var staged = await stagingLoader.LoadAsync(tableName, schema, run.ID,
                     Transformed(reader.ReadAsync(ct), mapping, () => read++),
                     (rowNo, ex) =>
@@ -88,6 +90,15 @@ namespace XafImport.Module.Import
                         if (failed <= MaxRecordErrorLogs)
                         {
                             Log(os, run, ImportLogLevel.Error, ex.Message, rowNo);
+                        }
+                        // CFG-001: error policy — abort on first failure, or when the cap is hit.
+                        if (onError == ErrorPolicy.Abort)
+                        {
+                            throw new InvalidOperationException($"Run aborted: record {rowNo} failed and OnError is Abort. {ex.Message}");
+                        }
+                        if (maxErrors > 0 && failed >= maxErrors)
+                        {
+                            throw new InvalidOperationException($"Run aborted: {failed} record errors reached the MaxErrors limit ({maxErrors}).");
                         }
                     }, ct);
                 if (failed > MaxRecordErrorLogs)

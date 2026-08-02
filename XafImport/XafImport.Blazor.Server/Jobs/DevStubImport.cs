@@ -20,17 +20,24 @@ namespace XafImport.Blazor.Server.Jobs
             ["json"] = """[{"Name":"a","Qty":1,"Active":true},{"Name":"b","Qty":2.5,"Active":false}]""",
             ["xml"] = "<rows><row><Name>a</Name><Qty>1</Qty></row><row><Name>b</Name><Qty>2</Qty></row></rows>",
             ["txt"] = "hello\nworld\nthird line",
+            // Qty typed decimal from the first record; "oops" then fails conversion -> exercises CFG-001.
+            ["jsonbad"] = """[{"Name":"ok1","Qty":1},{"Name":"broken","Qty":"oops"},{"Name":"ok2","Qty":3}]""",
         };
 
         private readonly ImportService importService;
         private readonly IObjectSpaceFactory objectSpaceFactory;
         private readonly FileSource fileSource;
+        private readonly SqlServerSource sqlServerSource;
+        private readonly IConfiguration configuration;
 
-        public DevStubImportHandler(ImportService importService, IObjectSpaceFactory objectSpaceFactory, FileSource fileSource)
+        public DevStubImportHandler(ImportService importService, IObjectSpaceFactory objectSpaceFactory,
+            FileSource fileSource, SqlServerSource sqlServerSource, IConfiguration configuration)
         {
             this.importService = importService;
             this.objectSpaceFactory = objectSpaceFactory;
             this.fileSource = fileSource;
+            this.sqlServerSource = sqlServerSource;
+            this.configuration = configuration;
         }
 
         public async Task ExecuteAsync(DevStubImportCommand command, CancellationToken ct = default)
@@ -44,20 +51,31 @@ namespace XafImport.Blazor.Server.Jobs
                 {
                     definition = os.CreateObject<ImportDefinition>();
                     definition.Name = definitionName;
-                    definition.SourceType = SourceType.File;
+                    definition.SourceType = command.Format == "sql" ? SourceType.SqlServer : SourceType.File;
                     definition.FileFormat = FileFormat.Auto;
-                    os.CommitChanges();
                 }
+                if (command.Format == "sql")
+                {
+                    definition.SqlConnectionString = configuration.GetConnectionString("ConnectionString");
+                    definition.SqlQuery = "SELECT name AS TableName, object_id AS ObjectId, create_date AS CreatedOn FROM sys.tables";
+                }
+                os.CommitChanges();
                 definitionId = definition.ID;
             }
-            if (command.Format == null)
+            switch (command.Format)
             {
-                await importService.RunAsync(definitionId, new StubSource(), null, "dev stub (3 records)", ct);
-            }
-            else
-            {
-                using var payload = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(SamplePayloads[command.Format]));
-                await importService.RunAsync(definitionId, fileSource, payload, $"dev sample ({command.Format}, auto-detect)", ct);
+                case null:
+                    await importService.RunAsync(definitionId, new StubSource(), null, "dev stub (3 records)", ct);
+                    break;
+                case "sql":
+                    await importService.RunAsync(definitionId, sqlServerSource, null, "dev sql (sys.tables)", ct);
+                    break;
+                default:
+                    using (var payload = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(SamplePayloads[command.Format])))
+                    {
+                        await importService.RunAsync(definitionId, fileSource, payload, $"dev sample ({command.Format}, auto-detect)", ct);
+                    }
+                    break;
             }
         }
     }

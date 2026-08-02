@@ -42,6 +42,7 @@ namespace XafImport.Blazor.Server
             services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.XmlFormatParser>();
             services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.TxtFormatParser>();
             services.AddScoped<XafImport.Module.Import.FileSource>();
+            services.AddScoped<XafImport.Module.Import.SqlServerSource>();
             services.AddJobHandler<XafImport.Module.Import.RunImportCommand, XafImport.Module.Import.RunImportHandler>();
             services.AddJobHandler<DevStubImportCommand, DevStubImportHandler>();
             services.AddXaf(Configuration, builder =>

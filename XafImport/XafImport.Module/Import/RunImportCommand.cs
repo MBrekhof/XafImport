@@ -14,12 +14,15 @@ namespace XafImport.Module.Import
         private readonly ImportService importService;
         private readonly IObjectSpaceFactory objectSpaceFactory;
         private readonly FileSource fileSource;
+        private readonly SqlServerSource sqlServerSource;
 
-        public RunImportHandler(ImportService importService, IObjectSpaceFactory objectSpaceFactory, FileSource fileSource)
+        public RunImportHandler(ImportService importService, IObjectSpaceFactory objectSpaceFactory,
+            FileSource fileSource, SqlServerSource sqlServerSource)
         {
             this.importService = importService;
             this.objectSpaceFactory = objectSpaceFactory;
             this.fileSource = fileSource;
+            this.sqlServerSource = sqlServerSource;
         }
 
         public async Task ExecuteAsync(RunImportCommand command, CancellationToken ct = default)
@@ -27,6 +30,7 @@ namespace XafImport.Module.Import
             SourceType sourceType;
             byte[]? content;
             string? fileName;
+            string? querySummary;
             using (var os = objectSpaceFactory.CreateObjectSpace<ImportDefinition>())
             {
                 var definition = os.GetObjectByKey<ImportDefinition>(command.DefinitionId)
@@ -34,6 +38,9 @@ namespace XafImport.Module.Import
                 sourceType = definition.SourceType;
                 content = definition.UploadedFile?.Content;
                 fileName = definition.UploadedFile?.FileName;
+                querySummary = definition.SqlQuery is { Length: > 0 } q
+                    ? (q.Length > 80 ? q[..80] + "…" : q)
+                    : null;
             }
 
             switch (sourceType)
@@ -48,8 +55,11 @@ namespace XafImport.Module.Import
                         await importService.RunAsync(command.DefinitionId, fileSource, stream, fileName, ct);
                     }
                     break;
+                case SourceType.SqlServer:
+                    await importService.RunAsync(command.DefinitionId, sqlServerSource, null, querySummary, ct);
+                    break;
                 default:
-                    throw new NotSupportedException($"Source type {sourceType} is not implemented yet (SRC-001/SRC-002).");
+                    throw new NotSupportedException($"Source type {sourceType} is not implemented yet (SRC-002).");
             }
         }
     }
