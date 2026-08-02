@@ -40,6 +40,25 @@ namespace XafImport.Blazor.Server.Jobs
             this.configuration = configuration;
         }
 
+        private static MemoryStream BuildSampleXlsx()
+        {
+            using var workbook = new DevExpress.Spreadsheet.Workbook();
+            var sheet = workbook.Worksheets[0];
+            sheet["A1"].Value = "Name";
+            sheet["B1"].Value = "Qty";
+            sheet["C1"].Value = "Ok";
+            sheet["A2"].Value = "row1";
+            sheet["B2"].Value = 12.5;
+            sheet["C2"].Value = true;
+            sheet["A3"].Value = "row2";
+            sheet["B3"].Value = 7;
+            sheet["C3"].Value = false;
+            var ms = new MemoryStream();
+            workbook.SaveDocument(ms, DevExpress.Spreadsheet.DocumentFormat.Xlsx);
+            ms.Position = 0;
+            return ms;
+        }
+
         public async Task ExecuteAsync(DevStubImportCommand command, CancellationToken ct = default)
         {
             var definitionName = command.Format == null ? "DevTest" : "DevTest_" + command.Format;
@@ -69,6 +88,12 @@ namespace XafImport.Blazor.Server.Jobs
                     break;
                 case "sql":
                     await importService.RunAsync(definitionId, sqlServerSource, null, "dev sql (sys.tables)", ct);
+                    break;
+                case "xlsx":
+                    using (var xlsx = BuildSampleXlsx())
+                    {
+                        await importService.RunAsync(definitionId, fileSource, xlsx, "dev sample (xlsx, auto-detect)", ct);
+                    }
                     break;
                 default:
                     using (var payload = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(SamplePayloads[command.Format])))

@@ -40,6 +40,7 @@ namespace XafImport.Blazor.Server
             // Registration order = magic-byte detection order; TXT is the catch-all and stays last.
             services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.JsonFormatParser>();
             services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.XmlFormatParser>();
+            services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.XlsFormatParser>();
             services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.TxtFormatParser>();
             services.AddScoped<XafImport.Module.Import.FileSource>();
             services.AddScoped<XafImport.Module.Import.SqlServerSource>();
