@@ -1,0 +1,593 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "mcp-excalidraw-server",
+  "elements": [
+    {
+      "id": "msbl57ii2z172n6fm3l",
+      "type": "text",
+      "x": 20,
+      "y": 15,
+      "strokeColor": "#1e1e1e",
+      "text": "XafImport — ETL-style Import/Export for DevExpress XAF",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.422Z",
+      "updatedAt": "2026-08-02T09:15:58.422Z",
+      "version": 1
+    },
+    {
+      "id": "ui",
+      "type": "rectangle",
+      "x": 355,
+      "y": 70,
+      "width": 230,
+      "height": 60,
+      "backgroundColor": "#e5dbff",
+      "strokeColor": "#1e1e1e",
+      "label": {
+        "text": "XAF Blazor UI\n\"Run\" action"
+      },
+      "fontSize": 14,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.422Z",
+      "updatedAt": "2026-08-02T09:15:58.422Z",
+      "version": 1
+    },
+    {
+      "id": "pipeline",
+      "type": "rectangle",
+      "x": 335,
+      "y": 180,
+      "width": 270,
+      "height": 330,
+      "backgroundColor": "transparent",
+      "strokeColor": "#868e96",
+      "strokeStyle": "dashed",
+      "createdAt": "2026-08-02T09:15:58.422Z",
+      "updatedAt": "2026-08-02T09:15:58.422Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57ii3jvmw016v9h",
+      "type": "text",
+      "x": 348,
+      "y": 188,
+      "strokeColor": "#868e96",
+      "text": "ETL pipeline",
+      "fontSize": 13,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.422Z",
+      "updatedAt": "2026-08-02T09:15:58.422Z",
+      "version": 1
+    },
+    {
+      "id": "extract",
+      "type": "rectangle",
+      "x": 355,
+      "y": 215,
+      "width": 230,
+      "height": 85,
+      "backgroundColor": "#fff3bf",
+      "strokeColor": "#1e1e1e",
+      "label": {
+        "text": "Extract\nISource / IFormatParser\nmagic-byte detect"
+      },
+      "fontSize": 13,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.422Z",
+      "updatedAt": "2026-08-02T09:15:58.422Z",
+      "version": 1
+    },
+    {
+      "id": "transform",
+      "type": "rectangle",
+      "x": 355,
+      "y": 330,
+      "width": 230,
+      "height": 55,
+      "backgroundColor": "#fff3bf",
+      "strokeColor": "#1e1e1e",
+      "label": {
+        "text": "Transform\nMappingTransformer"
+      },
+      "fontSize": 13,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.422Z",
+      "updatedAt": "2026-08-02T09:15:58.422Z",
+      "version": 1
+    },
+    {
+      "id": "load",
+      "type": "rectangle",
+      "x": 355,
+      "y": 415,
+      "width": 230,
+      "height": 70,
+      "backgroundColor": "#fff3bf",
+      "strokeColor": "#1e1e1e",
+      "label": {
+        "text": "Load\nSqlServerStaging\nLoader"
+      },
+      "fontSize": 13,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.422Z",
+      "updatedAt": "2026-08-02T09:15:58.422Z",
+      "version": 1
+    },
+    {
+      "id": "filesrc",
+      "type": "rectangle",
+      "x": 20,
+      "y": 205,
+      "width": 250,
+      "height": 95,
+      "backgroundColor": "#d0ebff",
+      "strokeColor": "#1e1e1e",
+      "label": {
+        "text": "File upload (FileData)\njson xml xlsx pdf\ndocx txt"
+      },
+      "fontSize": 13,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.422Z",
+      "updatedAt": "2026-08-02T09:15:58.422Z",
+      "version": 1
+    },
+    {
+      "id": "sqlsrc",
+      "type": "rectangle",
+      "x": 20,
+      "y": 335,
+      "width": 250,
+      "height": 70,
+      "backgroundColor": "#d0ebff",
+      "strokeColor": "#1e1e1e",
+      "label": {
+        "text": "SQL Server\nconnection + query"
+      },
+      "fontSize": 13,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.422Z",
+      "updatedAt": "2026-08-02T09:15:58.422Z",
+      "version": 1
+    },
+    {
+      "id": "apisrc",
+      "type": "rectangle",
+      "x": 20,
+      "y": 440,
+      "width": 250,
+      "height": 50,
+      "backgroundColor": "#d0ebff",
+      "strokeColor": "#868e96",
+      "strokeStyle": "dashed",
+      "label": {
+        "text": "REST API (planned)"
+      },
+      "fontSize": 13,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.422Z",
+      "updatedAt": "2026-08-02T09:15:58.422Z",
+      "version": 1
+    },
+    {
+      "id": "run",
+      "type": "rectangle",
+      "x": 700,
+      "y": 205,
+      "width": 260,
+      "height": 95,
+      "backgroundColor": "#d3f9d8",
+      "strokeColor": "#1e1e1e",
+      "label": {
+        "text": "ImportRun\nlogs / error policy\nXAF notification"
+      },
+      "fontSize": 13,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "staging",
+      "type": "rectangle",
+      "x": 700,
+      "y": 415,
+      "width": 260,
+      "height": 70,
+      "backgroundColor": "#d3f9d8",
+      "strokeColor": "#1e1e1e",
+      "label": {
+        "text": "Staging tables stg_*\ntyped, created on the fly"
+      },
+      "fontSize": 13,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "exportfile",
+      "type": "rectangle",
+      "x": 700,
+      "y": 560,
+      "width": 260,
+      "height": 70,
+      "backgroundColor": "#d3f9d8",
+      "strokeColor": "#1e1e1e",
+      "label": {
+        "text": "Export file on the run\njson xml csv xlsx"
+      },
+      "fontSize": 13,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "hangfire",
+      "type": "rectangle",
+      "x": 335,
+      "y": 560,
+      "width": 270,
+      "height": 70,
+      "backgroundColor": "#ffe3e3",
+      "strokeColor": "#1e1e1e",
+      "label": {
+        "text": "Hangfire (SQL storage)\nworker logon: HangfireJob"
+      },
+      "fontSize": 13,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57ii7fwr97esaap",
+      "type": "arrow",
+      "x": 470,
+      "y": 138,
+      "width": 0,
+      "height": 50,
+      "strokeColor": "#1e1e1e",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          34
+        ]
+      ],
+      "start": {
+        "id": "ui"
+      },
+      "end": {
+        "id": "pipeline"
+      },
+      "endArrowhead": "arrow",
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57ii8l53akuykjd",
+      "type": "arrow",
+      "x": 277.9990534224661,
+      "y": 254.54613928342258,
+      "width": 85,
+      "height": 0,
+      "strokeColor": "#1e1e1e",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          69.00189315506782,
+          1.0615675870010364
+        ]
+      ],
+      "start": {
+        "id": "filesrc"
+      },
+      "end": {
+        "id": "extract"
+      },
+      "endArrowhead": "arrow",
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57iibcblixl8bg",
+      "type": "arrow",
+      "x": 253.67099969863318,
+      "y": 332.38311548893466,
+      "width": 85,
+      "height": -90,
+      "strokeColor": "#1e1e1e",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          93.76911171384478,
+          -32.458538670177006
+        ]
+      ],
+      "start": {
+        "id": "sqlsrc"
+      },
+      "end": {
+        "id": "extract"
+      },
+      "endArrowhead": "arrow",
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57iiqnrf2n62wq",
+      "type": "arrow",
+      "x": 190.89950363896446,
+      "y": 435.6949322920458,
+      "width": 85,
+      "height": -170,
+      "strokeColor": "#868e96",
+      "strokeStyle": "dashed",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          205.7913541678542,
+          -131.38986458409158
+        ]
+      ],
+      "start": {
+        "id": "apisrc"
+      },
+      "end": {
+        "id": "extract"
+      },
+      "endArrowhead": "arrow",
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57iiaip12wu068c",
+      "type": "arrow",
+      "x": 470,
+      "y": 308,
+      "width": 0,
+      "height": 30,
+      "strokeColor": "#1e1e1e",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          14
+        ]
+      ],
+      "start": {
+        "id": "extract"
+      },
+      "end": {
+        "id": "transform"
+      },
+      "endArrowhead": "arrow",
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57iisabd5e53m8n",
+      "type": "arrow",
+      "x": 470,
+      "y": 393,
+      "width": 0,
+      "height": 30,
+      "strokeColor": "#1e1e1e",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          14
+        ]
+      ],
+      "start": {
+        "id": "transform"
+      },
+      "end": {
+        "id": "load"
+      },
+      "endArrowhead": "arrow",
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57iix7j7fkoj5b",
+      "type": "arrow",
+      "x": 593,
+      "y": 450,
+      "width": 115,
+      "height": 0,
+      "strokeColor": "#1e1e1e",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          99,
+          0
+        ]
+      ],
+      "start": {
+        "id": "load"
+      },
+      "end": {
+        "id": "staging"
+      },
+      "endArrowhead": "arrow",
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57iibs2rdlini2",
+      "type": "arrow",
+      "x": 612.7483141302847,
+      "y": 308.32161373041293,
+      "width": 95,
+      "height": 0,
+      "strokeColor": "#1e1e1e",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          79.50337173943058,
+          -20.427949683048098
+        ]
+      ],
+      "start": {
+        "id": "pipeline"
+      },
+      "end": {
+        "id": "run"
+      },
+      "endArrowhead": "arrow",
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57iihwu0blhe9hu",
+      "type": "arrow",
+      "x": 830,
+      "y": 493,
+      "width": 0,
+      "height": 75,
+      "strokeColor": "#1e1e1e",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          59
+        ]
+      ],
+      "start": {
+        "id": "staging"
+      },
+      "end": {
+        "id": "exportfile"
+      },
+      "endArrowhead": "arrow",
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57ii61vkhdp3law",
+      "type": "arrow",
+      "x": 470,
+      "y": 552,
+      "width": 0,
+      "height": -50,
+      "strokeColor": "#1e1e1e",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -34
+        ]
+      ],
+      "start": {
+        "id": "hangfire"
+      },
+      "end": {
+        "id": "pipeline"
+      },
+      "endArrowhead": "arrow",
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57iiixf5f0a8t7f",
+      "type": "text",
+      "x": 490,
+      "y": 145,
+      "strokeColor": "#5c5f66",
+      "text": "enqueue command",
+      "fontSize": 12,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57iikvknubinz8d",
+      "type": "text",
+      "x": 615,
+      "y": 225,
+      "strokeColor": "#5c5f66",
+      "text": "status / logs",
+      "fontSize": 12,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57ii3wcmrfslpxw",
+      "type": "text",
+      "x": 845,
+      "y": 515,
+      "strokeColor": "#5c5f66",
+      "text": "ExportService",
+      "fontSize": 12,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    },
+    {
+      "id": "msbl57iin42bhi64ae",
+      "type": "text",
+      "x": 485,
+      "y": 528,
+      "strokeColor": "#5c5f66",
+      "text": "executes runs",
+      "fontSize": 12,
+      "fontFamily": 2,
+      "createdAt": "2026-08-02T09:15:58.423Z",
+      "updatedAt": "2026-08-02T09:15:58.423Z",
+      "version": 1
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#ffffff",
+    "gridSize": null
+  }
+}
