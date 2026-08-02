@@ -38,6 +38,17 @@ namespace XafImport.Module.BusinessObjects.Import
         [ToolTip("JSON column mapping used by the transform stage; empty = pass-through")]
         public virtual string? ColumnMappingJson { get; set; }
 
+        // File source: the file to import. Uploaded via the standard XAF file attachment editor,
+        // stored in DB so background (Hangfire) runs can read it without a temp-file handoff.
+        [VisibleInDetailView(false)]
+        [VisibleInListView(false)]
+        public virtual Guid? UploadedFileId { get; set; }
+
+        [System.ComponentModel.DataAnnotations.Schema.ForeignKey(nameof(UploadedFileId))]
+        [Aggregated]
+        [ExpandObjectMembers(ExpandObjectMembers.Never)]
+        public virtual FileData? UploadedFile { get; set; }
+
         [Aggregated]
         public virtual IList<ImportRun> Runs { get; set; } = new ObservableCollection<ImportRun>();
     }
