@@ -34,6 +34,9 @@ namespace XafImport.Module.BusinessObjects.Import
         [ToolTip("With ContinueSkipRecord: abort anyway once this many records failed (0 = unlimited)")]
         public virtual int MaxErrors { get; set; }
 
+        [ToolTip("Create an XAF notification when a run finishes (any outcome)")]
+        public virtual bool NotifyOnCompletion { get; set; } = true;
+
         // SQL Server source. ponytail: stored plain until SRC-001 adds encryption (provider_settings pattern).
         public virtual string? SqlConnectionString { get; set; }
         public virtual string? SqlQuery { get; set; }

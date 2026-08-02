@@ -26,6 +26,7 @@ namespace XafImport.Module.BusinessObjects
         public DbSet<Import.ImportDefinition> ImportDefinitions { get; set; }
         public DbSet<Import.ImportRun> ImportRuns { get; set; }
         public DbSet<Import.ImportLogEntry> ImportLogEntries { get; set; }
+        public DbSet<Import.ImportNotification> ImportNotifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

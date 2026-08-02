@@ -123,6 +123,15 @@ namespace XafImport.Module.Import
             finally
             {
                 run.Finished = DateTime.Now;
+                if (definition.NotifyOnCompletion)
+                {
+                    // NOT-001: picked up by the XAF Notifications module on its next poll.
+                    var notification = os.CreateObject<ImportNotification>();
+                    notification.Run = run;
+                    notification.AlarmTime = DateTime.Now;
+                    notification.Message =
+                        $"Import '{definition.Name}' {run.Status}: {run.RecordsRead} read, {run.RecordsStaged} staged, {run.RecordsFailed} failed";
+                }
                 os.CommitChanges();
             }
             return run.ID;

@@ -55,7 +55,11 @@ namespace XafImport.Blazor.Server
                     .AddCloning()
                     .AddConditionalAppearance()
                     .AddFileAttachments()
-                    .AddNotifications()
+                    .AddNotifications(options =>
+                    {
+                        // ponytail: short poll so run-completion notifications show promptly; default is 5 min.
+                        options.NotificationsRefreshInterval = TimeSpan.FromSeconds(30);
+                    })
                     .AddOffice()
                     .AddValidation(options =>
                     {
