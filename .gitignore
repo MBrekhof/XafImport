@@ -16,3 +16,6 @@ Model.User.xafml
 
 # Logs & local junk
 *.log
+
+# Playwright MCP artifacts
+.playwright-mcp/
