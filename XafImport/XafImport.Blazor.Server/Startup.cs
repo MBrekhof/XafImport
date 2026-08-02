@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.EntityFrameworkCore;
 using XafImport.Blazor.Server.Jobs;
 using XafImport.Blazor.Server.Services;
+using XafImport.Module.Import;
 using XafImport.Module.Jobs;
 
 namespace XafImport.Blazor.Server
@@ -34,20 +35,9 @@ namespace XafImport.Blazor.Server
             services.AddHttpContextAccessor();
             services.AddScoped<CircuitHandler, CircuitHandlerProxy>();
             services.AddJobDispatcher(Configuration);
+            services.AddXafImportPipeline();
             services.AddJobHandler<PingCommand, PingHandler>();
-            services.AddScoped<XafImport.Module.Import.IStagingLoader, XafImport.Module.Import.SqlServerStagingLoader>();
-            services.AddScoped<XafImport.Module.Import.ImportService>();
-            // Registration order = magic-byte detection order; TXT is the catch-all and stays last.
-            services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.JsonFormatParser>();
-            services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.XmlFormatParser>();
-            services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.XlsFormatParser>();
-            services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.PdfFormatParser>();
-            services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.DocFormatParser>();
-            services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.TxtFormatParser>();
-            services.AddScoped<XafImport.Module.Import.FileSource>();
-            services.AddScoped<XafImport.Module.Import.SqlServerSource>();
             services.AddJobHandler<XafImport.Module.Import.RunImportCommand, XafImport.Module.Import.RunImportHandler>();
-            services.AddScoped<XafImport.Module.Import.ExportService>();
             services.AddJobHandler<XafImport.Module.Import.RunExportCommand, XafImport.Module.Import.RunExportHandler>();
             services.AddJobHandler<DevStubImportCommand, DevStubImportHandler>();
             services.AddXaf(Configuration, builder =>
