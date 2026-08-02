@@ -1,0 +1,18 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# XAF runtime user model diffs
+Model.User.xafml
+
+# Logs & local junk
+*.log

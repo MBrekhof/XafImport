@@ -1,0 +1,12 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="EasyTest" />
+    <BuildType Name="Release" />
+  </Configurations>
+  <Project Path="XafImport/XafImport.Blazor.Server/XafImport.Blazor.Server.csproj" />
+  <Project Path="XafImport/XafImport.MiddleTier/XafImport.MiddleTier.csproj" />
+  <Project Path="XafImport/XafImport.Module/XafImport.Module.csproj" />
+  <Project Path="XafImport/XafImport.WebApi/XafImport.WebApi.csproj" />
+  <Project Path="XafImport/XafImport.Win/XafImport.Win.csproj" />
+</Solution>
