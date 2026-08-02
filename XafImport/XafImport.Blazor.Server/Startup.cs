@@ -41,6 +41,8 @@ namespace XafImport.Blazor.Server
             services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.JsonFormatParser>();
             services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.XmlFormatParser>();
             services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.XlsFormatParser>();
+            services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.PdfFormatParser>();
+            services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.DocFormatParser>();
             services.AddScoped<XafImport.Module.Import.IFormatParser, XafImport.Module.Import.Formats.TxtFormatParser>();
             services.AddScoped<XafImport.Module.Import.FileSource>();
             services.AddScoped<XafImport.Module.Import.SqlServerSource>();

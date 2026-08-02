@@ -59,6 +59,30 @@ namespace XafImport.Blazor.Server.Jobs
             return ms;
         }
 
+        private static MemoryStream BuildSampleDocx()
+        {
+            using var server = new DevExpress.XtraRichEdit.RichEditDocumentServer();
+            server.Document.AppendText("First paragraph from the dev sample.");
+            server.Document.Paragraphs.Append();
+            server.Document.AppendText("Second paragraph with more text.");
+            var ms = new MemoryStream();
+            server.SaveDocument(ms, DevExpress.XtraRichEdit.DocumentFormat.OpenXml);
+            ms.Position = 0;
+            return ms;
+        }
+
+        private static MemoryStream BuildSamplePdf()
+        {
+            using var server = new DevExpress.XtraRichEdit.RichEditDocumentServer();
+            server.Document.AppendText("PDF sample line one.");
+            server.Document.Paragraphs.Append();
+            server.Document.AppendText("PDF sample line two.");
+            var ms = new MemoryStream();
+            server.ExportToPdf(ms);
+            ms.Position = 0;
+            return ms;
+        }
+
         public async Task ExecuteAsync(DevStubImportCommand command, CancellationToken ct = default)
         {
             var definitionName = command.Format == null ? "DevTest" : "DevTest_" + command.Format;
@@ -93,6 +117,18 @@ namespace XafImport.Blazor.Server.Jobs
                     using (var xlsx = BuildSampleXlsx())
                     {
                         await importService.RunAsync(definitionId, fileSource, xlsx, "dev sample (xlsx, auto-detect)", ct);
+                    }
+                    break;
+                case "docx":
+                    using (var docx = BuildSampleDocx())
+                    {
+                        await importService.RunAsync(definitionId, fileSource, docx, "dev sample (docx, auto-detect)", ct);
+                    }
+                    break;
+                case "pdf":
+                    using (var pdf = BuildSamplePdf())
+                    {
+                        await importService.RunAsync(definitionId, fileSource, pdf, "dev sample (pdf, auto-detect)", ct);
                     }
                     break;
                 default:
