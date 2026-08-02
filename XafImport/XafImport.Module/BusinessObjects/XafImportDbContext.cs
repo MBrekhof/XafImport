@@ -23,6 +23,9 @@ namespace XafImport.Module.BusinessObjects
         public DbSet<UserToken> UserTokens { get; set; }
         public DbSet<FileData> FileData { get; set; }
         public DbSet<HCategory> HCategories { get; set; }
+        public DbSet<Import.ImportDefinition> ImportDefinitions { get; set; }
+        public DbSet<Import.ImportRun> ImportRuns { get; set; }
+        public DbSet<Import.ImportLogEntry> ImportLogEntries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

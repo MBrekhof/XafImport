@@ -1,0 +1,44 @@
+#nullable enable
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using DevExpress.ExpressApp.DC;
+using DevExpress.ExpressApp.Model;
+using DevExpress.Persistent.Base;
+using DevExpress.Persistent.BaseImpl.EF;
+
+namespace XafImport.Module.BusinessObjects.Import
+{
+    public enum SourceType { File, SqlServer, Api }
+
+    // Auto = detect by magic bytes; explicit value overrides detection.
+    public enum FileFormat { Auto, Json, Xml, Xls, Pdf, Doc, Txt }
+
+    [DefaultClassOptions]
+    [DefaultProperty(nameof(Name))]
+    [NavigationItem("Import")]
+    public class ImportDefinition : BaseObject
+    {
+        public virtual string Name { get; set; } = string.Empty;
+        public virtual SourceType SourceType { get; set; }
+        public virtual FileFormat FileFormat { get; set; }
+        public virtual bool Enabled { get; set; } = true;
+
+        [ToolTip("Optional cron expression for scheduled background runs")]
+        public virtual string? CronExpression { get; set; }
+
+        // SQL Server source. ponytail: stored plain until SRC-001 adds encryption (provider_settings pattern).
+        public virtual string? SqlConnectionString { get; set; }
+        public virtual string? SqlQuery { get; set; }
+
+        // API source
+        public virtual string? ApiEndpoint { get; set; }
+        [ModelDefault("IsPassword", "true")]
+        public virtual string? ApiKey { get; set; }
+
+        [ToolTip("JSON column mapping used by the transform stage; empty = pass-through")]
+        public virtual string? ColumnMappingJson { get; set; }
+
+        [Aggregated]
+        public virtual IList<ImportRun> Runs { get; set; } = new ObservableCollection<ImportRun>();
+    }
+}

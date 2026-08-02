@@ -25,7 +25,7 @@ namespace XafImport.Blazor.Server
             base.OnSetupStarted();
 
 #if DEBUG
-            if(System.Diagnostics.Debugger.IsAttached && CheckCompatibilityType == CheckCompatibilityType.DatabaseSchema) {
+            if(CheckCompatibilityType == CheckCompatibilityType.DatabaseSchema) {
                 DatabaseUpdateMode = DatabaseUpdateMode.UpdateDatabaseAlways;
             }
 #endif
@@ -33,6 +33,10 @@ namespace XafImport.Blazor.Server
         void XafImportBlazorApplication_DatabaseVersionMismatch(object sender, DatabaseVersionMismatchEventArgs e)
         {
 #if EASYTEST
+            e.Updater.Update();
+            e.Handled = true;
+#elif DEBUG
+            // Debug builds always auto-update: this POC runs via `dotnet run` (no debugger attached).
             e.Updater.Update();
             e.Handled = true;
 #else
