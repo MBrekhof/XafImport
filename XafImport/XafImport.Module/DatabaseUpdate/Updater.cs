@@ -65,6 +65,16 @@ namespace XafImport.Module.DatabaseUpdate
                 });
             }
 
+            // Service user for background jobs: Hangfire workers authenticate as this user.
+            // ponytail: admin role + empty password for POC; dedicated JobService role + real password when permissions matter.
+            if (userManager.FindUserByName<ApplicationUser>(ObjectSpace, "HangfireJob") == null)
+            {
+                _ = userManager.CreateUser<ApplicationUser>(ObjectSpace, "HangfireJob", "", (user) =>
+                {
+                    user.Roles.Add(adminRole);
+                });
+            }
+
             ObjectSpace.CommitChanges(); //This line persists created object(s).
 #endif
         }

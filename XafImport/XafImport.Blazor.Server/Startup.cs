@@ -4,10 +4,13 @@ using DevExpress.ExpressApp.Blazor.Services;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.EntityFrameworkCore;
+using XafImport.Blazor.Server.Jobs;
 using XafImport.Blazor.Server.Services;
+using XafImport.Module.Jobs;
 
 namespace XafImport.Blazor.Server
 {
@@ -30,6 +33,8 @@ namespace XafImport.Blazor.Server
             services.AddServerSideBlazor();
             services.AddHttpContextAccessor();
             services.AddScoped<CircuitHandler, CircuitHandlerProxy>();
+            services.AddJobDispatcher(Configuration);
+            services.AddJobHandler<PingCommand, PingHandler>();
             services.AddXaf(Configuration, builder =>
             {
                 builder.UseApplication<XafImportBlazorApplication>();
@@ -130,12 +135,29 @@ namespace XafImport.Blazor.Server
             app.UseAuthorization();
             app.UseAntiforgery();
             app.UseXaf();
+            if (Configuration.GetValue<bool>("Jobs:UseHangfire"))
+            {
+                app.UseHangfireDashboard("/hangfire", new DashboardOptions
+                {
+                    Authorization = new[] { new HangfireDashboardAuthFilter(env.IsDevelopment()) }
+                });
+            }
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapXafEndpoints();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
                 endpoints.MapControllers();
+                if (env.IsDevelopment())
+                {
+                    // Smoke-test hook: enqueues a PingCommand through the real dispatcher.
+                    endpoints.MapGet("/dev/ping-job", async context =>
+                    {
+                        await context.RequestServices.GetRequiredService<IJobDispatcher>()
+                            .DispatchAsync(new PingCommand("dev endpoint"));
+                        await context.Response.WriteAsync("enqueued");
+                    });
+                }
             });
         }
     }

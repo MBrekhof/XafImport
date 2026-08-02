@@ -43,6 +43,18 @@ namespace XafImport.Blazor.Server
                 }
                 else
                 {
+#if DEBUG
+                    // Update/seed the database BEFORE the host starts: Hangfire workers run from
+                    // process start and need the HangfireJob service user to exist (XAF's normal
+                    // update path only runs when a user opens the app).
+                    // Set the Blazor value manager first — the updater touches XAF static state,
+                    // which would otherwise pin the non-Blazor SimpleValueManager (DX error text prescribes this).
+                    DevExpress.Persistent.Base.ValueManager.ValueManagerType = typeof(DevExpress.ExpressApp.AmbientContext.AsyncValueManager<>);
+                    using (var serviceScope = host.Services.CreateScope())
+                    {
+                        serviceScope.ServiceProvider.GetRequiredService<DevExpress.ExpressApp.Utils.IDBUpdater>().Update(false, true);
+                    }
+#endif
                     host.Run();
                 }
             }
